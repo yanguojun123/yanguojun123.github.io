@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>旋转Treap的简单实现 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Treap=Tree+Heap Treap是一棵二叉搜索树，它的左子树和右子树分别是一个Treap，和一般的二叉搜索树不同的是，Treap结构中每个节点x有两个域，一个是其关键字值key，一个是优先级数priority（他是一个独立选取的随机数），对于Treap结构，其关键字遵循二叉搜索树性质，其优先级遵循堆性质。但是这里要注意的是Treap和二叉堆有一点不同，就是二叉堆必须是完全二叉树，而Tre">
+<meta property="og:type" content="article">
+<meta property="og:title" content="旋转Treap的简单实现">
+<meta property="og:url" content="http://yoursite.com/2018/05/16/旋转Treap的简单实现/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Treap=Tree+Heap Treap是一棵二叉搜索树，它的左子树和右子树分别是一个Treap，和一般的二叉搜索树不同的是，Treap结构中每个节点x有两个域，一个是其关键字值key，一个是优先级数priority（他是一个独立选取的随机数），对于Treap结构，其关键字遵循二叉搜索树性质，其优先级遵循堆性质。但是这里要注意的是Treap和二叉堆有一点不同，就是二叉堆必须是完全二叉树，而Tre">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-05-16T08:50:27.637Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="旋转Treap的简单实现">
+<meta name="twitter:description" content="Treap=Tree+Heap Treap是一棵二叉搜索树，它的左子树和右子树分别是一个Treap，和一般的二叉搜索树不同的是，Treap结构中每个节点x有两个域，一个是其关键字值key，一个是优先级数priority（他是一个独立选取的随机数），对于Treap结构，其关键字遵循二叉搜索树性质，其优先级遵循堆性质。但是这里要注意的是Treap和二叉堆有一点不同，就是二叉堆必须是完全二叉树，而Tre">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-旋转Treap的简单实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/16/旋转Treap的简单实现/" class="article-date">
+  <time datetime="2018-05-16T08:47:55.000Z" itemprop="datePublished">2018-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      旋转Treap的简单实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Treap=Tree+Heap</p>
+<p>Treap是一棵<a href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%8E%92%E5%BA%8F%E6%A0%91" target="_blank" rel="noopener">二叉搜索树</a>，它的左子树和右子树分别是一个Treap，和一般的二叉搜索树不同的是，Treap结构中每个节点x有两个域，一个是其关键字值key，一个是优先级数priority（他是一个独立选取的随机数），对于Treap结构，其关键字遵循二叉搜索树性质，其优先级遵循堆性质。但是这里要注意的是Treap和二叉堆有一点不同，就是<a href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E5%A0%86" target="_blank" rel="noopener">二叉堆</a>必须是完全二叉树，而Treap可以并不一定是。</p>
+<p>  在这里用的链表实现的旋转的Treap，简单实现是思路比较简单，但代码稍微有点繁琐。有点懒，不想整理了。</p>
+<p>   TreapNode结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">template&lt;class T&gt;</span><br><span class="line">struct treapNode</span><br><span class="line">&#123;</span><br><span class="line">	int key;//用于二叉搜索树的关键字 </span><br><span class="line">	int pri;//用于堆性质的优先级数字 </span><br><span class="line">	T element;//其中的元素 </span><br><span class="line">    treapNode&lt;T&gt; *leftChild,   //左子树 </span><br><span class="line">                 *rightChild,</span><br><span class="line">				 *father;  //右子树 </span><br><span class="line">   treapNode() &#123;leftChild = rightChild = father=NULL;&#125;//构造函数 </span><br><span class="line">   treapNode(const T&amp; theElement):element(theElement)</span><br><span class="line">   &#123;</span><br><span class="line">      leftChild = rightChild = father=NULL;</span><br><span class="line">   &#125;</span><br><span class="line">   treapNode(const T&amp; theElement,</span><br><span class="line">                  treapNode *theLeftChild,</span><br><span class="line">                  treapNode *theRightChild,</span><br><span class="line">				  treapNode *theFather)</span><br><span class="line">                  :element(theElement)</span><br><span class="line">   &#123;</span><br><span class="line">      leftChild = theLeftChild;</span><br><span class="line">      rightChild = theRightChild;</span><br><span class="line">      father=theFather;</span><br><span class="line">   &#125;</span><br><span class="line">	treapNode(int theKey,int thePri,T theElement)</span><br><span class="line">	&#123;</span><br><span class="line">		key=theKey;</span><br><span class="line">		pri=thePri;</span><br><span class="line">		element=theElement;</span><br><span class="line">		 leftChild = rightChild = father=NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	treapNode(int theKey,T theElement)</span><br><span class="line">	&#123;</span><br><span class="line">		key=theKey;</span><br><span class="line">		pri=rand();</span><br><span class="line">		element = theElement;</span><br><span class="line">		leftChild=rightChild=father=NULL;</span><br><span class="line">	&#125; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在节点中加入了父节点的指针，为了后面的旋转操作能够更简单一点，不加也是可以的，不过就要稍微复杂一点了。</p>
+<p>插入操作：</p>
+<p>不满足：当插入的节点为其父节点的左孩子时，应该右旋，否则左旋。</p>
+<p>插入方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line">template&lt;class T&gt;</span><br><span class="line">void treap&lt;T&gt;::insert(treapNode&lt;T&gt; *t)//插入方法，参数为一个treap节点。 </span><br><span class="line">&#123;   t-&gt;leftChild=t-&gt;rightChild=t-&gt;father=NULL;</span><br><span class="line">	if(root==NULL)//当treap为空的时候情况 </span><br><span class="line">	  &#123;</span><br><span class="line">	   root=t;</span><br><span class="line">	   treapSize++;</span><br><span class="line">	   return ;</span><br><span class="line">      &#125;</span><br><span class="line">	else//当treap不为空的时候，要找到要删除的位置 </span><br><span class="line">	&#123;</span><br><span class="line">		treapNode&lt;T&gt; *pp=root;</span><br><span class="line">		treapNode&lt;T&gt; *p=NULL;</span><br><span class="line">		while(pp!=NULL)</span><br><span class="line">		&#123;   p=pp;</span><br><span class="line">			if(t-&gt;key&lt;pp-&gt;key)//小于关键字时 </span><br><span class="line">				pp=pp-&gt;leftChild;</span><br><span class="line">			else</span><br><span class="line">			&#123;</span><br><span class="line">				if(t-&gt;key&gt;pp-&gt;key)//大于关键字时 </span><br><span class="line">				pp=pp-&gt;rightChild;</span><br><span class="line">				else//要插入的节点已经重复时 </span><br><span class="line">				&#123;</span><br><span class="line">				pp-&gt;element=t-&gt;element;</span><br><span class="line">				treapSize--;</span><br><span class="line">				return; </span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	  if(t-&gt;key&gt;p-&gt;key)</span><br><span class="line">	  &#123;</span><br><span class="line">	   p-&gt;rightChild=t;</span><br><span class="line">	   t-&gt;father=p;</span><br><span class="line">      &#125;</span><br><span class="line">	  else</span><br><span class="line">	  &#123;</span><br><span class="line">	   p-&gt;leftChild=t;</span><br><span class="line">	   t-&gt;father=p;</span><br><span class="line">      &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	treapNode&lt;T&gt; *q=t-&gt;father;//获取插入节点的父节点 </span><br><span class="line">	//treapNode&lt;T&gt; *w=t-&gt;father;</span><br><span class="line">	int com;//判断是否循环继续的量 </span><br><span class="line">	do//采用do-while结构，保证循环至少进行一次 </span><br><span class="line">  &#123; com=0;</span><br><span class="line">	if(t-&gt;pri&lt;q-&gt;pri&amp;&amp;t-&gt;key&lt;q-&gt;key)//当优先级不满足堆的性质并且插入的节点在左孩子的位置时，此时应该右旋 </span><br><span class="line">	&#123;   if(t-&gt;rightChild!=NULL)//当插入节点的右孩子不为空的时候 </span><br><span class="line">	    &#123;</span><br><span class="line">		   q-&gt;leftChild=t-&gt;rightChild;//插入节点的右孩子变成其父节点的左孩子 </span><br><span class="line">		   t-&gt;rightChild-&gt;father=q;//插入节点的右孩子的父母指向插入节点的父母 </span><br><span class="line">		   t-&gt;rightChild=q;//父节点变为插入节点的右孩子 </span><br><span class="line">		   if(q-&gt;father!=NULL)//在这里分情况讨论，当其父节点的父节点不为空的时候 </span><br><span class="line">		   &#123;</span><br><span class="line">		   	t-&gt;father=q-&gt;father;//插入节点的父节点为其父节点的父节点</span><br><span class="line">			if(q-&gt;father-&gt;leftChild==q)//判断父节点是否是父节点的父节点的左孩子 </span><br><span class="line">		   	q-&gt;father-&gt;leftChild=t;//父节点的父节点左孩子变成插入节点 </span><br><span class="line">		   	else</span><br><span class="line">		   	q-&gt;father-&gt;rightChild=t;</span><br><span class="line">			q-&gt;father=t; //父节点的父母变成插入节点 </span><br><span class="line">		   &#125;</span><br><span class="line">		   else//当其父节点的父节点为空时 </span><br><span class="line">		   &#123;</span><br><span class="line">		   	t-&gt;father=NULL;//插入节点的父节点为空 </span><br><span class="line">		   	root=t;</span><br><span class="line">		   	q-&gt;father=t;//父节点的父母变为插入节点 </span><br><span class="line">		   &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	    else//当插入节点的右孩子为空的时候 </span><br><span class="line">	    &#123;   t-&gt;rightChild=q;</span><br><span class="line">		    if(q-&gt;father!=NULL)//当其父节点的父节点不为空时 </span><br><span class="line">		    &#123;</span><br><span class="line">			  t-&gt;father=q-&gt;father;</span><br><span class="line">			  if(q-&gt;father-&gt;leftChild==q) //判断父节点是否是父节点的父节点的左孩子</span><br><span class="line">			  q-&gt;father-&gt;leftChild=t;</span><br><span class="line">			  else</span><br><span class="line">			  q-&gt;father-&gt;rightChild=t;</span><br><span class="line">			  q-&gt;father=t; </span><br><span class="line">			  q-&gt;leftChild=NULL;</span><br><span class="line">		    &#125; </span><br><span class="line">		    else//当其父节点的父节点为空时 </span><br><span class="line">			&#123;</span><br><span class="line">				t-&gt;father=NULL;//父节点变为空 </span><br><span class="line">				root=t;//此时根节点为当前插入的节点 </span><br><span class="line">				t-&gt;rightChild=q;//插入节点的右孩子变为原来节点的父节点 </span><br><span class="line">				q-&gt;father=t; //插入节点的父节点改成当前节点 </span><br><span class="line">				q-&gt;leftChild=NULL;//插入节点的原来的父节点改为空值 </span><br><span class="line">			&#125;</span><br><span class="line">		&#125; com=1;</span><br><span class="line">	&#125;</span><br><span class="line">	if(t-&gt;pri&lt;q-&gt;pri&amp;&amp;t-&gt;key&gt;q-&gt;key)//当优先级不满足堆的性质并且插入的节点在右孩子的位置时，此时应该左旋 </span><br><span class="line">	&#123;   if(t-&gt;leftChild!=NULL)//当插入节点的左孩子不为空的时候 </span><br><span class="line">	    &#123;</span><br><span class="line">		   q-&gt;rightChild=t-&gt;leftChild;//插入节点的左孩子变成其父节点的右孩子 </span><br><span class="line">		   t-&gt;leftChild-&gt;father=q;//插入节点的左孩子的父母指向插入节点的父母 </span><br><span class="line">		   t-&gt;leftChild=q;//父节点变为插入节点的左孩子 </span><br><span class="line">		   if(q-&gt;father!=NULL)//在这里分情况讨论，当其父节点的父节点不为空的时候 </span><br><span class="line">		   &#123;</span><br><span class="line">		   	t-&gt;father=q-&gt;father;//插入节点的父节点为其父节点的父节点</span><br><span class="line">			if(q-&gt;father-&gt;leftChild==q)//判断父节点是否是父节点的父节点的左孩子 </span><br><span class="line">		   	q-&gt;father-&gt;leftChild=t;//父节点的父节点左孩子变成插入节点 </span><br><span class="line">		   	else</span><br><span class="line">		   	q-&gt;father-&gt;rightChild=t;</span><br><span class="line">			q-&gt;father=t; //父节点的父母变成插入节点 </span><br><span class="line">			</span><br><span class="line">		   &#125;</span><br><span class="line">		   else//当其父节点的父节点为空时 </span><br><span class="line">		   &#123;</span><br><span class="line">		   	t-&gt;father=NULL;//插入节点的父节点为空 </span><br><span class="line">		   	root=t;</span><br><span class="line">		   	q-&gt;father=t;//父节点的父母变为插入节点 </span><br><span class="line">		   	q-&gt;leftChild=NULL;</span><br><span class="line">		   &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	    else//当插入节点的左孩子为空的时候 </span><br><span class="line">	    &#123;   t-&gt;leftChild=q;</span><br><span class="line">		    if(q-&gt;father!=NULL)//当其父节点的父节点不为空时 </span><br><span class="line">		    &#123;</span><br><span class="line">			  t-&gt;father=q-&gt;father;</span><br><span class="line">			  if(q-&gt;father-&gt;leftChild==q) //判断父节点是否是父节点的父节点的左孩子</span><br><span class="line">			  q-&gt;father-&gt;leftChild=t;</span><br><span class="line">			  else</span><br><span class="line">			  q-&gt;father-&gt;rightChild=t;</span><br><span class="line">			  q-&gt;father=t; </span><br><span class="line">			  q-&gt;rightChild=NULL;</span><br><span class="line">		    &#125; </span><br><span class="line">		    else//当其父节点的父节点为空时 </span><br><span class="line">			&#123;</span><br><span class="line">				t-&gt;father=NULL;</span><br><span class="line">				root=t;</span><br><span class="line">				t-&gt;leftChild=q;</span><br><span class="line">				q-&gt;father=t;</span><br><span class="line">				q-&gt;rightChild=NULL; </span><br><span class="line">			&#125;</span><br><span class="line">		&#125; com=1;</span><br><span class="line">	&#125;</span><br><span class="line">	q=t-&gt;father;//更新插入节点的父节点 </span><br><span class="line">  &#125; while(q!=NULL&amp;&amp;com==1);//</span><br><span class="line">  treapSize++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>删除操作:</p>
+<p>先找到要删除的节点的位置，然后判断要删除的节点的有几个孩子，然后再根据情况具体实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line">template&lt;class T&gt;</span><br><span class="line">void treap&lt;T&gt;::erase(int key)</span><br><span class="line">&#123;</span><br><span class="line">	treapNode&lt;T&gt; *t=root;</span><br><span class="line">	while(t!=NULL)//首先找到要删除的节点 </span><br><span class="line">	&#123;</span><br><span class="line">		if(t-&gt;key&lt;key)</span><br><span class="line">		t=t-&gt;rightChild;</span><br><span class="line">		else</span><br><span class="line">		&#123;</span><br><span class="line">		    if(t-&gt;key&gt;key)</span><br><span class="line">			t=t-&gt;leftChild;</span><br><span class="line">			else//当相等时即找到要删除的节点了，跳出循环 </span><br><span class="line">			break;</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">	if(t==NULL)//treap中没有要删除的关键字的元素 </span><br><span class="line">	&#123;</span><br><span class="line">		cout&lt;&lt;&quot;please put in correct data&quot;&lt;&lt;key&lt;&lt;&quot; &quot;;</span><br><span class="line">		return ;</span><br><span class="line">	&#125;</span><br><span class="line">	else//找到要删除的节点后 </span><br><span class="line">	&#123;</span><br><span class="line">	    treapNode&lt;T&gt; *q=t-&gt;father;//找到要删除的节点的父节点 </span><br><span class="line">	   if(t-&gt;leftChild==NULL&amp;&amp;t-&gt;rightChild==NULL)//最简单的情况：当要删除的节点为叶节点时 ，并且此种情况下优先级的顺序不会改变 </span><br><span class="line">	  &#123;</span><br><span class="line">		if(t==root)//其中的特殊情况：只有一个节点，即根节点 </span><br><span class="line">		root=NULL;</span><br><span class="line">		else//不为根节点 </span><br><span class="line">		&#123;</span><br><span class="line">			if(key&lt;q-&gt;key)//判断是左孩子还是右孩子 </span><br><span class="line">			q-&gt;leftChild=NULL;</span><br><span class="line">			else</span><br><span class="line">			q-&gt;rightChild=NULL;</span><br><span class="line">			t-&gt;father=NULL;//让此节点的父节点为空 </span><br><span class="line">			//t=NULL;//释放此节点 </span><br><span class="line">		&#125;</span><br><span class="line">	  &#125;</span><br><span class="line">	  if((t-&gt;leftChild==NULL&amp;&amp;t-&gt;rightChild!=NULL)||(t-&gt;leftChild!=NULL&amp;&amp;t-&gt;rightChild==NULL))//当要删除的节点为有一个孩子时 </span><br><span class="line">	  &#123;  </span><br><span class="line">	   if(q==NULL)//当要删除的节点为根节点时 </span><br><span class="line">	   &#123;</span><br><span class="line">	   	 if(t-&gt;leftChild!=NULL)//如果左孩子不为空 </span><br><span class="line">	   	 &#123; t-&gt;leftChild-&gt;father=NULL;</span><br><span class="line">		   root=t-&gt;leftChild;</span><br><span class="line">		   t-&gt;leftChild=NULL;</span><br><span class="line">	     &#125;</span><br><span class="line">	     else//右孩子不为空 </span><br><span class="line">	     &#123;</span><br><span class="line">	     	t-&gt;rightChild-&gt;father=NULL;</span><br><span class="line">	     	root=t-&gt;rightChild;</span><br><span class="line">	     	t-&gt;rightChild=NULL;</span><br><span class="line">		 &#125;</span><br><span class="line">	   &#125;</span><br><span class="line">	   else//删除的节点不为根节点时 </span><br><span class="line">	   &#123;</span><br><span class="line">	  	 if(t-&gt;key&lt;q-&gt;key)//当为其左孩子时 </span><br><span class="line">		 &#123;</span><br><span class="line">		    if(t-&gt;leftChild!=NULL)//当要删除的节点的左孩子不为空时 </span><br><span class="line">			&#123;</span><br><span class="line">				q-&gt;leftChild=t-&gt;leftChild;//删除节点的父节点的左孩子指向删除节点的左孩子 </span><br><span class="line">				t-&gt;leftChild-&gt;father=q;//删除节点的左孩子的父亲指向删除节点的父亲 </span><br><span class="line">				t-&gt;leftChild=NULL;//删除节点的左孩子指针指向空 </span><br><span class="line">				t-&gt;father=NULL;//其父节点的指针指向空 </span><br><span class="line">			&#125; </span><br><span class="line">			else//当要删除的右孩子不为空时 </span><br><span class="line">			&#123;</span><br><span class="line">		       q-&gt;leftChild=t-&gt;rightChild;</span><br><span class="line">			   t-&gt;rightChild-&gt;father=q;</span><br><span class="line">			   t-&gt;rightChild=NULL;</span><br><span class="line">			   t-&gt;father=NULL;		</span><br><span class="line">		    &#125;	 </span><br><span class="line">		 &#125; </span><br><span class="line">		 else//当为其右孩子时 </span><br><span class="line">		 &#123;</span><br><span class="line">		 	if(t-&gt;leftChild!=NULL)//当要删除的节点的左孩子不为空时 </span><br><span class="line">			&#123;</span><br><span class="line">				q-&gt;rightChild=t-&gt;leftChild;</span><br><span class="line">				t-&gt;leftChild-&gt;father=q;</span><br><span class="line">				t-&gt;leftChild=NULL;</span><br><span class="line">				t-&gt;father=NULL;</span><br><span class="line">				//t=NULL;</span><br><span class="line">			&#125; </span><br><span class="line">			else//当删除的节点的右孩子不为空时 </span><br><span class="line">			&#123;</span><br><span class="line">		       q-&gt;rightChild=t-&gt;rightChild;</span><br><span class="line">			   t-&gt;rightChild-&gt;father=q;</span><br><span class="line">			   t-&gt;rightChild=NULL;</span><br><span class="line">			   t-&gt;father=NULL;</span><br><span class="line">			   //t=NULL;		</span><br><span class="line">		    &#125;	 </span><br><span class="line">		 &#125;</span><br><span class="line">	   &#125;</span><br><span class="line">     &#125;</span><br><span class="line">	  if(t-&gt;leftChild!=NULL&amp;&amp;t-&gt;rightChild!=NULL)//左右孩子均不为空的情况 </span><br><span class="line">	  &#123; </span><br><span class="line">	  	if(t-&gt;leftChild-&gt;pri&lt;t-&gt;rightChild-&gt;pri)//找出左右孩子中优先级较小的那个 </span><br><span class="line">		  &#123;treapNode&lt;T&gt; *p=t-&gt;leftChild;//记录下当前节点的左孩子 </span><br><span class="line">		  	if(p-&gt;rightChild==NULL)//当左孩子的右孩子为空时 </span><br><span class="line">			  &#123;</span><br><span class="line">			  	if(q==NULL)//如果待删节点为根节点 </span><br><span class="line">				  &#123;</span><br><span class="line">				  	p-&gt;rightChild=t-&gt;rightChild;</span><br><span class="line">					p-&gt;father=NULL;</span><br><span class="line">					t-&gt;rightChild-&gt;father=p;</span><br><span class="line">					t-&gt;leftChild=t-&gt;rightChild=NULL;</span><br><span class="line">					//t=NULL;</span><br><span class="line">					root=p;   </span><br><span class="line">				  &#125;</span><br><span class="line">				else//待删节点不为根节点 </span><br><span class="line">				&#123;</span><br><span class="line">					p-&gt;rightChild=t-&gt;rightChild;</span><br><span class="line">					t-&gt;rightChild-&gt;father=p;</span><br><span class="line">					 p-&gt;father=q;</span><br><span class="line">					 if(q-&gt;leftChild==t)</span><br><span class="line">					 q-&gt;leftChild=p;</span><br><span class="line">					 else</span><br><span class="line">					 q-&gt;rightChild=p;</span><br><span class="line">					 t-&gt;father=t-&gt;leftChild=t-&gt;rightChild=NULL;</span><br><span class="line">					 //t=NULL;</span><br><span class="line">				&#125;</span><br><span class="line">			  	</span><br><span class="line">			  &#125;</span><br><span class="line">			else//当左孩子的右孩子不为空时 </span><br><span class="line">			 &#123;</span><br><span class="line">			   	t-&gt;father=p;</span><br><span class="line">			   	t-&gt;leftChild=p-&gt;rightChild;</span><br><span class="line">			   	p-&gt;rightChild-&gt;father=t;</span><br><span class="line">			   	p-&gt;rightChild=t;</span><br><span class="line">			   	if(q==NULL)</span><br><span class="line">				 &#123;</span><br><span class="line">				   	p-&gt;father=NULL;</span><br><span class="line">				   	root=p;</span><br><span class="line">				 &#125;</span><br><span class="line">				else</span><br><span class="line">				 &#123;</span><br><span class="line">				     p-&gt;father=q;</span><br><span class="line">				     if(q-&gt;leftChild==t)</span><br><span class="line">				     q-&gt;leftChild=p;</span><br><span class="line">				     else</span><br><span class="line">				     q-&gt;rightChild=p;</span><br><span class="line">				 &#125;</span><br><span class="line">				 erase(key);</span><br><span class="line">			 &#125;</span><br><span class="line">		  &#125;</span><br><span class="line">		  else//找出左右孩子中优先级较小的那个 </span><br><span class="line">		  &#123;treapNode&lt;T&gt; *p=t-&gt;rightChild;//记录下当前节点的右孩子 </span><br><span class="line">		  	if(t-&gt;rightChild-&gt;leftChild==NULL)//当右孩子的左孩子为空时 </span><br><span class="line">			  &#123;</span><br><span class="line">			  	if(q==NULL)//如果待删节点为根节点 </span><br><span class="line">				  &#123;</span><br><span class="line">				  	p-&gt;leftChild=t-&gt;leftChild;</span><br><span class="line">					p-&gt;father=NULL;</span><br><span class="line">					t-&gt;leftChild-&gt;father=p;</span><br><span class="line">					t-&gt;leftChild=t-&gt;rightChild=NULL;</span><br><span class="line">					//t=NULL;</span><br><span class="line">					root=p;   </span><br><span class="line">				  &#125;</span><br><span class="line">				else//待删节点不为根节点 </span><br><span class="line">				&#123;</span><br><span class="line">					p-&gt;leftChild=t-&gt;leftChild;</span><br><span class="line">					t-&gt;leftChild-&gt;father=p;</span><br><span class="line">					 p-&gt;father=q;</span><br><span class="line">					 if(q-&gt;leftChild==t)</span><br><span class="line">					 q-&gt;leftChild=p;</span><br><span class="line">					 else</span><br><span class="line">					 q-&gt;rightChild=p;</span><br><span class="line">					 t-&gt;father=t-&gt;leftChild=t-&gt;rightChild=NULL;</span><br><span class="line">					 //t=NULL;</span><br><span class="line">				&#125;</span><br><span class="line">			  	</span><br><span class="line">			  &#125;</span><br><span class="line">			else//当右孩子的左孩子不为空时 </span><br><span class="line">			 &#123;</span><br><span class="line">			   	t-&gt;father=p;</span><br><span class="line">			   	t-&gt;rightChild=p-&gt;leftChild;</span><br><span class="line">			   	p-&gt;leftChild-&gt;father=t;</span><br><span class="line">			   	p-&gt;leftChild=t;</span><br><span class="line">			   	if(q==NULL)</span><br><span class="line">				 &#123;</span><br><span class="line">				   	p-&gt;father=NULL;</span><br><span class="line">				   	root=p;</span><br><span class="line">				 &#125;</span><br><span class="line">				else</span><br><span class="line">				 &#123;</span><br><span class="line">				     p-&gt;father=q;</span><br><span class="line">				     if(q-&gt;leftChild==t)</span><br><span class="line">				     q-&gt;leftChild=p;</span><br><span class="line">				     else</span><br><span class="line">				     q-&gt;rightChild=p;</span><br><span class="line">				 &#125;</span><br><span class="line">				 erase(key);</span><br><span class="line">			 &#125;</span><br><span class="line">		  &#125;</span><br><span class="line">	  &#125; </span><br><span class="line">	  treapSize--;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/05/16/旋转Treap的简单实现/" data-id="cjl7tunz70008pwuml9yhl5ml" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/21/eclipse连接Mysql-0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          eclipse连接Mysql
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-计算机图形学-opencv-Java/">Android 计算机图形学 opencv Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-操作系统/">linux 操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/拓扑排序-有向图/">拓扑排序 有向图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境配置类/">环境配置类</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android-计算机图形学-opencv-Java/" style="font-size: 10px;">Android 计算机图形学 opencv Java</a> <a href="/tags/linux-操作系统/" style="font-size: 10px;">linux 操作系统</a> <a href="/tags/拓扑排序-有向图/" style="font-size: 10px;">拓扑排序 有向图</a> <a href="/tags/环境配置类/" style="font-size: 10px;">环境配置类</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/24/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/10/社区医院选址问题/">社区医院选址问题</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/10/基于拓扑排序的排课程序/">基于拓扑排序的排课程序</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/04/Android手指个数识别/">Android手指个数识别</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/28/吸烟者问题/">吸烟者问题</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
