@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="###一、问题描述    抽烟者问题。假设一个系统中有三个抽烟者进程，每个抽烟者不断地卷烟并抽烟。抽烟者卷起并抽掉一颗烟需要有三种材料：烟草、纸和胶水。一个抽烟者有烟草，一个有纸，另一个有胶水。系统中还有两个供应者进程，它们无限地供应所有三种材料，但每次仅轮流提供三种材料中的两种。得到缺失的两种材料的抽烟者在卷起并抽掉一颗烟后会发信号通知供应者，让它继续提供另外的两种材料。这一过程重复进行。 请用">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2018/05/28/吸烟者问题/吸烟者问题/图1.png">
+<meta property="og:image" content="http://yoursite.com/2018/05/28/吸烟者问题/图1.png">
 <meta property="og:updated_time" content="2018-05-28T13:34:32.408Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="吸烟者问题">
 <meta name="twitter:description" content="###一、问题描述    抽烟者问题。假设一个系统中有三个抽烟者进程，每个抽烟者不断地卷烟并抽烟。抽烟者卷起并抽掉一颗烟需要有三种材料：烟草、纸和胶水。一个抽烟者有烟草，一个有纸，另一个有胶水。系统中还有两个供应者进程，它们无限地供应所有三种材料，但每次仅轮流提供三种材料中的两种。得到缺失的两种材料的抽烟者在卷起并抽掉一颗烟后会发信号通知供应者，让它继续提供另外的两种材料。这一过程重复进行。 请用">
-<meta name="twitter:image" content="http://yoursite.com/2018/05/28/吸烟者问题/吸烟者问题/图1.png">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/28/吸烟者问题/图1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -94,7 +94,7 @@
 <h3 id="二、问题分析"><a href="#二、问题分析" class="headerlink" title="二、问题分析"></a>二、问题分析</h3><p>  这个问题主要涉及到操作系统中的进程见的同步与互斥的，是一个非常经典的问题。可以看做是生产者消费者这一类。</p>
 <p>  三个抽烟者相当于三个不同的消费者，他们每次只会有一个抽烟者可以抽到烟，其余两个则需要等待。而在这里默认空间大小只有一个单元，即供应者每次放下两种材料后都会停下来等待直到有消费者使用了这两种材料，他才会继续放另两种材料。相当于说缓冲区的大小为1。为了方便起见，我们把要放的两种材料捆绑到一起，看成一个单位，分别用A、B、C表示，三个吸烟着分别用1,2,3号表示。</p>
 <p>###三、画出大致的操作流程和关键代码</p>
-<p><img src="吸烟者问题/图1.png" alt="img"> </p>
+<p><img src="/2018/05/28/吸烟者问题/图1.png" alt="img"> </p>
 <p>设置五个信号量分别为三个抽烟者对应的glue、tobacco、paper和与供应者相应的同步信号量表示缓存区为空的empty信号量。最后还有一个保证临界资源安全访问的互斥信号量mutex。</p>
 <p>供应者：                  1号抽烟者：               2号抽烟者：                  3号抽烟者:</p>
 <p>while(1)                    while(1)                       while(1)                          whiel(1)</p>
@@ -131,7 +131,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/05/28/吸烟者问题/" data-id="cjl7u24ud00090gumlqhhulda" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/05/28/吸烟者问题/" data-id="cjl7x6cg5000bqgumgnzj9naf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-操作系统/">linux 操作系统</a></li></ul>
